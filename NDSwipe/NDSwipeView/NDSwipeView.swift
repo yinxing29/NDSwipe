@@ -182,6 +182,10 @@ class NDSwipeView: UIView {
     
     //MARK: - 手势事件
     @objc func swipe(sender: UISwipeGestureRecognizer) {
+        guard totalNumber > 0 else {
+            return
+        }
+        
         if sender.state == .began {
             p_releaseTimer()
         }
@@ -194,10 +198,18 @@ class NDSwipeView: UIView {
     }
     
     @objc func tap() {
+        if totalNumber == 0 {
+            return
+        }
+        
         delegate?.swipeView(swipe: self, didSelectedIndex: nowIndex)
     }
     
     @objc func pan(sender: UIPanGestureRecognizer) {
+        guard let currentCell = centerCell, totalNumber > 0 else {
+            return
+        }
+        
         let translation = sender.translation(in: self)
         var pointStart: CGPoint = .zero
         var pointLast: CGPoint = .zero
@@ -211,11 +223,11 @@ class NDSwipeView: UIView {
             
             let xTatalMove = pointLast.x - pointStart.x
             let changeX = xTatalMove * horizontalSpacing * 2.0 / contentWidth
-            var x = (centerCell?.frame.origin.x ?? 0.0) + changeX
+            var x = (currentCell.frame.origin.x) + changeX
             let changeY = verticalSpacing * changeX / horizontalSpacing
-            var y = (centerCell?.frame.origin.y ?? 0.0)
+            var y = (currentCell.frame.origin.y)
             let changeHeight = verticalSpacing * 2.0 * changeX / horizontalSpacing
-            var height = (centerCell?.frame.size.height ?? 0.0)
+            var height = (currentCell.frame.size.height)
             let changeAlpha = 0.4 * changeX / horizontalSpacing
             let alpha = (centerCell?.alpha ?? 1.0) - CGFloat(fabs(Double(changeAlpha)))
             if velocity.x > 0.0 && x > horizontalSpacing {
@@ -441,6 +453,10 @@ class NDSwipeView: UIView {
     private func p_createTimer() {
         p_releaseTimer()
         
+        if totalNumber == 0 {
+            return
+        }
+        
         timer = Timer(timeInterval: autoScrollTimeInterval, target: self, selector: #selector(p_timer), userInfo: nil, repeats: true)
         RunLoop.main.add(timer!, forMode: .default)
     }
@@ -476,6 +492,10 @@ class NDSwipeView: UIView {
         }
         
         totalNumber = number
+        
+        if totalNumber == 0 {
+            return
+        }
         
         guard let nowCell = delegate?.swipeView(swipe: self, index: nowIndex) else {
             return
