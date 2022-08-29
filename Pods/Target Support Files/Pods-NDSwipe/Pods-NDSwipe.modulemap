@@ -1,0 +1,6 @@
+module Pods_NDSwipe {
+  umbrella header "Pods-NDSwipe-umbrella.h"
+
+  export *
+  module * { export * }
+}
