@@ -172,10 +172,13 @@ class NDSwipeView: UIView {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
         swipe.direction = .left
         addGestureRecognizer(swipe)
-        
+
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
         swipeRight.direction = .right
         addGestureRecognizer(swipeRight)
+        
+//        let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(sender:)))
+//        addGestureRecognizer(pan)
 
     }
     //MARK: - --------------------- init END ---------------------
@@ -458,7 +461,7 @@ class NDSwipeView: UIView {
         }
         
         timer = Timer(timeInterval: autoScrollTimeInterval, target: self, selector: #selector(p_timer), userInfo: nil, repeats: true)
-        RunLoop.main.add(timer!, forMode: .default)
+        RunLoop.main.add(timer!, forMode: .common)
     }
     
     private func p_releaseTimer() {
